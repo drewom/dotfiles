@@ -22,6 +22,7 @@ c.downloads.remove_finished = 800
 c.auto_save.session         = True
 c.editor.command            = ["termite", "-e", "nvim '{}'"]
 c.scrolling.smooth          = True
+c.content.autoplay          = False
 
 # Sidebar tabs with larger favicon
 c.tabs.favicons.scale       = 2.4
