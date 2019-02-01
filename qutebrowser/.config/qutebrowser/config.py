@@ -32,7 +32,7 @@ c.tabs.position             = "left"
 
 # Default show tab bar when cycling though them
 c.tabs.show                 = "switching"
-c.tabs.show_switching_delay = 250
+c.tabs.show_switching_delay = 450
 c.tabs.title.format         = "{audio}{title}"
 c.tabs.width                = "30%"
 c.tabs.select_on_remove     = 'prev' # previous tab is in the direction of parent
