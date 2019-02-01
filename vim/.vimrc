@@ -174,6 +174,16 @@
 	imap <silent> <F11> <ESC><F11>
 	imap <silent> <F12> <ESC><F12>
 
+" NetRW setup
+" <CR> -> hsplit, v -> vsplit, t -> tab
+" See netrw-browse-maps for details
+	let g:netrw_banner       = 0                       " no banner
+	let g:netrw_browse_split = 4                       " open in prev window
+	let g:netrw_altv         = 1                       " split to right
+	let g:netrw_liststyle    = 3                       " tree style view
+	let g:netrw_list_hide    = netrw_gitignore#Hide()  " ignore gitignored
+	let g:netrw_list_hide   .= ',\(^\|\s\s\)\zs\.\S\+' " ignore .git
+
 " YouCompleteMe intergration
 	let g:ycm_server_python_interpreter='/usr/bin/python2'
 	let g:ycm_global_ycm_extra_conf='/home/drew/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
