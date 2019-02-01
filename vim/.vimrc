@@ -1,4 +1,4 @@
- "__   _(_)_ _ __ ,_ __ ___ 
+ "__   _(_)_ _ __ ,_ __ ___
  "\ \ / / | '.` .\| '__) __)
   "\ V /| | || || | | ( (__
 "(_)\_/ |_|_||_||_|_|  \___)
@@ -124,7 +124,7 @@
 " Autocomplete settings
 	set wildmenu
 	set wildignore=*.o,*~
-	set wildmode=longest,list:longest
+	"set wildmode=longest,list,full
 	set complete=.,w,b,u,t,i,kspell
 
 " Automatically deletes all trailing whitespace on save.
