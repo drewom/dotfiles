@@ -66,9 +66,9 @@
 	set list "show following symbols to highlight whitespace
 	set listchars=tab:→\ ,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 	let &showbreak='⟩' "show this symbol before broken line overflow
-	hi NonText ctermfg=237 guifg=#303030
-	hi SpecialKey ctermfg=237 guifg=#303030
-	hi MatchParen cterm=none ctermbg=238
+	highlight NonText ctermfg=237 guifg=#303030
+	highlight SpecialKey ctermfg=237 guifg=#303030
+	highlight MatchParen cterm=none ctermbg=238
 
 " remap command mode to semi-colon
 	nnoremap ; :
@@ -85,6 +85,27 @@
 		endif
 	endfunction
 	inoremap <Tab> <C-R>=CleverTab()<CR>
+
+" autosave if variable is set
+	let g:autosave = 0
+	function! AutosaveToggle()
+		if !g:autosave
+			echo "autosave enabled!"
+			let g:autosave = 1
+		else
+			echo "autosave disabled!"
+			let g:autosave = 0
+		endif
+	endfunction
+	nnoremap <leader>a :call AutosaveToggle()<CR>
+	function! Autosave()
+		let name = expand('%')
+		if g:autosave && !empty(name)
+			echo "save " . name
+			update
+		endif
+	endfunction
+	autocmd InsertLeave,TextChanged * :call Autosave()
 
 " Display comments as italics
 	highlight Comment cterm=italic
