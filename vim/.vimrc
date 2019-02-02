@@ -19,7 +19,7 @@
 	set mouse=a                 " enable mouse
 	set hidden                  " allow hiding buffers without writing all changes
 	set sessionoptions-=options " don't save ':set' changes to session
-	set laststatus=2            " always show status bar
+	set laststatus=1            " show status bar when multiple windows
 	set autoread                " reload file on external edit
 	set ttyfast                 " i use st which is not detected as fast
 	set lazyredraw              " skip redraw during macros
@@ -86,26 +86,49 @@
 	endfunction
 	inoremap <Tab> <C-R>=CleverTab()<CR>
 
-" autosave if variable is set
-	let g:autosave = 0
-	function! AutosaveToggle()
-		if !g:autosave
-			echo "autosave enabled!"
-			let g:autosave = 1
+" toggle autosave feature
+	function AutosaveToggle() " bind keys to this to enable autosave
+		" if you are editing this function with autosave and autosource
+		" you will get an error here!
+		if !exists('b:autosave')
+			let b:autosave = 0
+		endif
+		let name = expand('%')
+		if filewritable(name) == 1
+			if !b:autosave
+				echom "+autosave: " . name
+				let b:autosave = 1
+				update
+			else
+				echom "-autosave: " . name
+				let b:autosave = 0
+			endif
 		else
-			echo "autosave disabled!"
-			let g:autosave = 0
+			echo "UNABLE TO AUTOSAVE, FILE NOT WRITABLE!"
 		endif
 	endfunction
 	nnoremap <leader>a :call AutosaveToggle()<CR>
-	function! Autosave()
+	function Autosave() " does the autosaving, called often
 		let name = expand('%')
-		if g:autosave && !empty(name)
+		if b:autosave && filewritable(name) == 1
 			echo "save " . name
 			update
 		endif
 	endfunction
-	autocmd InsertLeave,TextChanged * :call Autosave()
+	autocmd InsertLeave,TextChanged * :call Autosave() " only autosaves when
+
+" status bar
+	set statusline=
+	set statusline +=%1*\ %n\ %*            "buffer number
+	set statusline +=%5*%{&ff}%*            "file format
+	set statusline +=%3*%y%*                "file type
+	set statusline +=%4*\ %<%F%*            "full path
+	set statusline +=%{b:autosave==1?'[AUTO]':''} "modified flag
+	set statusline +=%2*%m%*                "modified flag
+	set statusline +=%1*%=%5l%*             "current line
+	set statusline +=%2*/%L%*               "total lines
+	set statusline +=%1*%4v\ %*             "virtual column number
+	set statusline +=%2*0x%04B\ %*          "character under cursor
 
 " Display comments as italics
 	highlight Comment cterm=italic
@@ -221,7 +244,9 @@
 "	let g:lsp_signs_enabled = 1         " enable signs
 "	let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 
-" auto source vimrc files on save
+" auto source vimrc files on save (but not if autosaving)
 	if has("autocmd")
-		autocmd! BufWritePost .vimrc,vimrc source %
+		if !exists("b:autosave") || b:autosave == 0
+			autocmd! BufWritePost .vimrc,vimrc source %
+		endif
 	endif
