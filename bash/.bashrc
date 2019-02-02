@@ -6,6 +6,12 @@
 # Interactive only from this point forward
 	[ -z "$PS1" ] && return
 
+# internal bashrc functions
+	__function_defined() {
+		declare -f -F $1 > /dev/null
+		return $?
+	}
+
 # cd is followed by ls automatically
 	function cd {
 		builtin cd "$@" > /dev/null && ls -hNF --color=auto --group-directories-first
@@ -68,12 +74,25 @@ export GPG_TTY=$(tty)
 	alias r="ranger"
 	alias sr="sudo ranger"
 	alias ka="killall"
-	alias g="git"
 	alias mkd="mkdir -pv"
 	alias rf="source ~/.bashrc"
 	alias refresh="shortcuts.sh && source ~/.bashrc" # Refresh shortcuts manually and reload bashrc
 	alias bw="wal -i ~/.config/wall.png" # Rerun pywal
 	alias dirs="dirs -v"
+
+# git aliases (alias all git aliases globally with g prefix e.g. 'gs' and 'gca')
+	if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+		. /etc/bash_completion
+	fi
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/completions/git
+	fi
+	alias g="git"
+	for galias in `git --list-cmds=alias`; do
+		alias g$galias="git $galias"
+		complete_func=_git_$(__git_aliased_command $galias)
+		__function_defined $complete_fnc && __git_complete g$galias $complete_func
+	done
 
 # Alternative to rm that moves files to hidden trash folder
 	function trash {
