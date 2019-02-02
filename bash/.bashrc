@@ -81,18 +81,17 @@ export GPG_TTY=$(tty)
 	alias dirs="dirs -v"
 
 # git aliases (alias all git aliases globally with g prefix e.g. 'gs' and 'gca')
-	if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-		. /etc/bash_completion
-	fi
-	if [ -f /usr/share/bash-completion/bash_completion ]; then
-		. /usr/share/bash-completion/completions/git
-	fi
 	alias g="git"
 	for galias in `git --list-cmds=alias`; do
 		alias g$galias="git $galias"
-		complete_func=_git_$(__git_aliased_command $galias)
-		__function_defined $complete_fnc && __git_complete g$galias $complete_func
 	done
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/completions/git
+		for galias in `git --list-cmds=alias`; do
+			complete_func=_git_$(__git_aliased_command $galias)
+			__function_defined $complete_fnc && __git_complete g$galias $complete_func
+		done
+	fi
 
 # Alternative to rm that moves files to hidden trash folder
 	function trash {
