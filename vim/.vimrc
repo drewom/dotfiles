@@ -110,7 +110,7 @@
 	nnoremap <leader>a :call AutosaveToggle()<CR>
 	function Autosave() " does the autosaving, called often
 		let name = expand('%')
-		if b:autosave && filewritable(name) == 1
+		if exists("b:autosave") && b:autosave && filewritable(name) == 1
 			echo "save " . name
 			update
 		endif
