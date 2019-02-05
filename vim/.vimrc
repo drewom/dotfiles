@@ -131,7 +131,7 @@
 	set statusline +=%2*0x%04B\ %*          "character under cursor
 
 " Display comments as italics
-	highlight Comment cterm=italic
+	"highlight Comment cterm=italic
 
 " ctrl+s saves
 	nnoremap <C-s> :w<cr>
