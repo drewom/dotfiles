@@ -5,6 +5,7 @@
 #(_) .__/_/  \___/_//_/_/\__/
  #/_/
 
+export PATH="$PATH:$(du "$HOME/.scripts/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export EDITOR="vim"
 export TERMINAL="st"
 export BROWSER="qutebrowser"
