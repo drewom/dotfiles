@@ -65,6 +65,7 @@ export GPG_TTY=$(tty)
 	alias psref="gpg-connect-agent RELOADAGENT /bye" # Refresh gpg
 
 # Some aliases
+	alias q="exit"
 	alias p="pacman --color always"
 	alias sp="sudo pacman --color always"
 	alias y="yaourt"
