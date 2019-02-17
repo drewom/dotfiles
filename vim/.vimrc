@@ -48,8 +48,7 @@
 	set breakindent   " indent wrapped text to match previous indent
 	set linebreak     " try and break on words, not min-word
 
-" Relative numbers
-	set number
+" Relative numbers, no number to keep gutter 2 chars
 	set relativenumber
 	set numberwidth=2
 
@@ -189,6 +188,7 @@
 " ring bell when job is finished
 	let g:asyncrun_bell = 1
 
+	 autocmd FileType c,cpp,objc,objcpp,h,hpp iabbr ccom /*<cr>/<up>
 " === Function keys ===
 " Get line, word and character counts with F3:
 	noremap <F3> :!wc <C-R>%<CR>

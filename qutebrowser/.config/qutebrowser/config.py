@@ -23,9 +23,10 @@ c.auto_save.session         = True
 c.editor.command            = ["st", "-e", "vim '{}'"]
 c.scrolling.smooth          = True
 c.content.autoplay          = False
+c.statusbar.hide            = True
 
 # Sidebar tabs with larger favicon
-c.tabs.favicons.scale       = 2.4
+c.tabs.favicons.scale       = 2.2
 c.tabs.padding              = {"top": 8, "right": 0, "bottom": 8, "left": 0}
 c.tabs.indicator.padding    = {"top": 8, "right": 0, "bottom": 8, "left": 0}
 c.tabs.position             = "left"
@@ -34,7 +35,7 @@ c.tabs.position             = "left"
 c.tabs.show                 = "switching"
 c.tabs.show_switching_delay = 450
 c.tabs.title.format         = "{audio}{title}"
-c.tabs.width                = "30%"
+c.tabs.width                = "25%"
 c.tabs.select_on_remove     = 'prev' # previous tab is in the direction of parent
 
 # search engine shortneners
