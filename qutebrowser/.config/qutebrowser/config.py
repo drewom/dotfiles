@@ -10,10 +10,6 @@ config.bind('xs', 'config-source') # re-source this config file
 config.bind('xm', 'spawn --detach mpv --fs --speed=1.33 --force-window yes {url}') # send current page to mpv to play video
 config.bind('xy', 'hint links spawn --detach mpv --fs --speed=1.33 --force-window yes {hint-url}') # send current page to mpv to play video
 
-# switch open bindings as open in new tab is the more useful binding
-config.bind('o', 'set-cmd-text -s :open -t ')
-config.bind('O', 'set-cmd-text -s :open ')
-
 # c.### are options set at launch
 c.content.cookies.accept    = 'all'
 c.content.geolocation       = 'ask'
