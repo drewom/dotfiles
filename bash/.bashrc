@@ -83,6 +83,7 @@ export GPG_TTY=$(tty)
 
 # git aliases (alias all git aliases globally with g prefix e.g. 'gs' and 'gca')
 	alias g="git"
+	complete -o bashdefault -o default -o nospace -F __git_wrap__git_main g
 	for galias in `git --list-cmds=alias`; do
 		alias g$galias="git $galias"
 	done
