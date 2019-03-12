@@ -7,8 +7,8 @@ config.bind('xg', 'tab-give') # break tab into own window
 config.bind('zd', 'download-open')
 config.bind('xb', 'config-cycle statusbar.hide')
 config.bind('xs', 'config-source') # re-source this config file
-config.bind('xm', 'spawn --detach mpv --fs --speed=1.33 --force-window yes {url}') # send current page to mpv to play video
-config.bind('xy', 'hint links spawn --detach mpv --fs --speed=1.33 --force-window yes {hint-url}') # send current page to mpv to play video
+config.bind('xv', 'spawn --detach mpv --ytdl-format=bestvideo[height<=?1080]+bestaudio/best --fs --speed=1.33 --force-window yes {url}') # send current page to mpv to play video
+config.bind(';v', 'hint links spawn --detach mpv --ytdl-format=bestvideo[height<=?1080]+bestaudio/best --fs --speed=1.33 --force-window yes {hint-url}') # send current page to mpv to play video
 
 # c.### are options set at launch
 c.content.cookies.accept    = 'all'
