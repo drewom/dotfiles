@@ -19,7 +19,7 @@
 	set mouse=a                 " enable mouse
 	set hidden                  " allow hiding buffers without writing all changes
 	set sessionoptions-=options " don't save ':set' changes to session
-	set laststatus=1            " show status bar when multiple windows
+	set laststatus=2            " show status bar always
 	set autoread                " reload file on external edit
 	set ttyfast                 " i use st which is not detected as fast
 	set lazyredraw              " skip redraw during macros
@@ -122,7 +122,7 @@
 	set statusline +=%5*%{&ff}%*            "file format
 	set statusline +=%3*%y%*                "file type
 	set statusline +=%4*\ %<%F%*            "full path
-	set statusline +=%{b:autosave==1?'[AUTO]':''} "modified flag
+	"set statusline +=%{exists('b:autosave')&&b:autosave==1?' [AUTO]':''} "modified flag
 	set statusline +=%2*%m%*                "modified flag
 	set statusline +=%1*%=%5l%*             "current line
 	set statusline +=%2*/%L%*               "total lines
@@ -188,7 +188,9 @@
 " ring bell when job is finished
 	let g:asyncrun_bell = 1
 
-	 autocmd FileType c,cpp,objc,objcpp,h,hpp iabbr ccom /*<cr>/<up>
+" filetype specific abbreviate macros
+	autocmd FileType c,cpp,objc,objcpp,h,hpp iabbr ccom /*<cr>/<up>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp iabbr ccase case : {<cr>}<up><cr>wi
 " === Function keys ===
 " Get line, word and character counts with F3:
 	noremap <F3> :!wc <C-R>%<CR>
@@ -197,9 +199,10 @@
 	noremap <F6> :setlocal spell! spelllang=en_gb<CR>
 
 " build and run shortcuts
-	nnoremap <silent> <F9> <ESC>:w<CR>:AsyncRun! clang -O0 -g -lm -lX11 -lGL -lGLU -lglut -lasound -o "$(VIM_FILENOEXT)" "$(VIM_FILEPATH)"<CR>
-	nnoremap <silent> <F10> <ESC>:w<CR>:AsyncRun! clang -Wall -O2 -lm -lX11 -lGL -lGLU -lglut -lasound -o "$(VIM_FILENOEXT)" "$(VIM_FILEPATH)"<CR>
-	nnoremap <silent> <F5> <ESC>:AsyncRun -raw -cwd=/home/drew/ /home/drew/bin/$(VIM_FILENOEXT)<CR>
+	set makeprg=bear\ make\ -j
+	nnoremap <silent> <F5> <ESC>:update<CR>:!make debugger<CR>
+	nnoremap <silent> <F9> <ESC>:update<CR>:make<CR>
+	nnoremap <silent> <F10> <ESC>:update<CR>:make clean<CR>
 
 " F10 to toggle quickfix window
 	nnoremap <F12> :call asyncrun#quickfix_toggle(10)<cr>
@@ -222,7 +225,7 @@
 " <CR> -> hsplit, v -> vsplit, t -> tab
 " See netrw-browse-maps for details
 	let g:netrw_banner       = 0                       " no banner
-	let g:netrw_browse_split = 4                       " open in prev window
+	let g:netrw_browse_split = 0                       " open in prev window
 	let g:netrw_altv         = 1                       " split to right
 	let g:netrw_liststyle    = 3                       " tree style view
 	let g:netrw_list_hide    = netrw_gitignore#Hide()  " ignore gitignored
@@ -231,6 +234,8 @@
 " YouCompleteMe intergration
 	let g:ycm_server_python_interpreter='/usr/bin/python2'
 	let g:ycm_global_ycm_extra_conf='/home/drew/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+
+	let g:multi_cursor_use_default_mapping=0
 
 " lsp clangd intergration
 "	if executable('clangd')
