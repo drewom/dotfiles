@@ -1,11 +1,16 @@
 #!/bin/sh
+#                   _ _
+# ___ __ _  ___    (_|_)
+#/ -_)  ' \/ _ \  / / /
+#\__/_/_/_/\___/_/ /_/
+#             |___/
 # Give dmenu list of all unicode characters to copy.
 # Shows the selected character in dunst if running.
 
 # Must have xclip installed to even show menu.
 xclip -h >/dev/null 2>/dev/null || exit
 
-chosen=$(grep -v "#" ~/.emoji | dmenu -i -l 20 -fn Monospace-18)
+chosen=$(grep -v "#" ~/.emoji | dmenu -i -l 10 -fn Monospace-18)
 
 [ "$chosen" != "" ] || exit
 
