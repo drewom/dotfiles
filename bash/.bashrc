@@ -12,11 +12,6 @@
 		return $?
 	}
 
-# cd is followed by ls automatically
-	function cd {
-		builtin cd "$@" > /dev/null && ls -hNF --color=auto --group-directories-first
-	}
-
 # Shell custom setup
 	stty -ixon                               # unlock <C-S> and <C-Q> from N/XOFF flow control
 	shopt -s autocd > /dev/null 2> /dev/null # Allows cd into directory by typing only the directory name.
@@ -42,7 +37,7 @@
 	HISTSIZE=50000
 	HISTFILESIZE=10000
 	HISTCONTROL="erasedups:ignoreboth"                                        # Avoid duplicate entries
-	export HISTIGNORE="&:[ ]*:exit:la:pushd:popd:dirs:ls:bg:fg:history:clear" # Don't record some commands
+	export HISTIGNORE="&:[ ]*:exit:la:pushd:popd:dirs:ls:bg:fg:history:clear:l:1:2:3:4:5:6:7:8:9" # Don't record some commands
 	HISTTIMEFORMAT='%F %T '                                                   # Use standard ISO 8601 timestamp
 
 # Enable incremental history search with up/down arrows (inc. Readline)[codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/]
@@ -50,6 +45,61 @@
 	bind '"\e[B": history-search-forward'
 	bind '"\e[C": forward-char'
 	bind '"\e[D": backward-char'
+
+# cd is followed by ls automatically
+	function cd () {
+		local x2 the_new_dir adir index;
+		local -i cnt;
+		if [[ $1 == "--" && $# == 1 ]]; then
+			# -- is the only param, print stack
+			dirs -v;
+			return 0;
+		fi;
+		the_new_dir=$1;
+		if [[ $1 == "--" ]]; then
+			# strip out -- if it is followed (this is probably autocd)
+			the_new_dir=$2;
+		fi;
+		[[ -z $1 ]] && the_new_dir=$HOME;
+		if [[ ${the_new_dir:0:1} == '-' ]]; then
+			index=${the_new_dir:1};
+			[[ -z $index ]] && index=1;
+			adir=$(builtin dirs +$index);
+			[[ -z $adir ]] && return 1;
+			the_new_dir=$adir;
+			echo $adir;
+		fi;
+		[[ ${the_new_dir:0:1} == '~' ]] && the_new_dir="${HOME}${the_new_dir:1}";
+		pushd "${the_new_dir}" > /dev/null;
+		ls -hNF --color=auto --group-directories-first;
+		[[ $? -ne 0 ]] && return 1;
+		the_new_dir=$(pwd);
+		popd -n +11 2> /dev/null > /dev/null;
+		for ((cnt=1; cnt <= 10; cnt++)) do
+			x2=$(dirs +${cnt} 2>/dev/null);
+			[[ $? -ne 0 ]] && return 0;
+			[[ ${x2:0:1} == '~' ]] && x2="${HOME}${x2:1}";
+			if [[ "${x2}" == "${the_new_dir}" ]]; then
+				popd -n +$cnt 2> /dev/null > /dev/null;
+				cnt=cnt-1;
+			fi;
+		done;
+		return 0
+	}
+# shorthand aliases for the above special switches 'cd -[- 0-9]'
+	alias l=cd\ --
+	alias 1=cd\ -1
+	alias 2=cd\ -2
+	alias 3=cd\ -3
+	alias 4=cd\ -4
+	alias 5=cd\ -5
+	alias 6=cd\ -6
+	alias 7=cd\ -7
+	alias 8=cd\ -8
+	alias 9=cd\ -9
+	#function cd {
+	#	builtin cd "$@" > /dev/null && ls -hNF --color=auto --group-directories-first
+	#}
 
 # Setting bash prompt. Capitalizes username and host if root user
 	if [ "$EUID" -ne 0 ]
@@ -68,10 +118,11 @@ export GPG_TTY=$(tty)
 	alias q="exit"
 	alias p="pacman --color always"
 	alias sp="sudo pacman --color always"
-	alias y="yaourt"
+	alias y="yay"
 	alias SS="sudo systemctl"
 	alias v="vim"
 	alias sv="sudo vim"
+	alias f="firefox --private"
 	alias r="ranger"
 	alias sr="sudo ranger"
 	alias ka="killall"
@@ -79,7 +130,7 @@ export GPG_TTY=$(tty)
 	alias rf="source ~/.bashrc"
 	alias refresh="shortcuts.sh && source ~/.bashrc" # Refresh shortcuts manually and reload bashrc
 	alias bw="wal -i ~/.config/wall.png" # Rerun pywal
-	alias dirs="dirs -v"
+	alias notes="vim ~/.notes"
 
 # git aliases (alias all git aliases globally with g prefix e.g. 'gs' and 'gca')
 	alias g="git"
@@ -100,15 +151,19 @@ export GPG_TTY=$(tty)
 		mkdir ~/.trash > /dev/null 2> /dev/null; mv "$@" ~/.trash
 	}
 
+# Golang binaries
+	export TWEEGO_PATH="$HOME/.tweego/story-formats"
+	export PATH="$PATH:$HOME/go/bin:$HOME/repos"
+
 # Adding color
-	alias ls='ls -hNF --color=auto --group-directories-first'
-	alias la='ls -hNaF --color=auto --group-directories-first'
-	alias cat="highlight --out-format=xterm256 --force" #Color cat - print file with syntax highlighting.
-	alias grep="grep --color=always" # Color highlight match.
+	alias ls='ls -hFN --color=auto --group-directories-first'
+	alias la='ls -hFNA --color=auto --group-directories-first'
+	alias ll='ls -hlFA --color=auto --group-directories-first'
+	alias ccat="highlight --out-format=xterm256 --force" #Color cat - print file with syntax highlighting.
+	alias cgrep="grep --color=always" # Color highlight match.
 
 # Youtube
 	alias yt="youtube-viewer -C -7 --results=42"
-	alias yts="youtube-viewer -C -7 --results=42 -SV"
 	alias ytd="youtube-dl --add-metadata -ic" # Download video link
 	alias yta="youtube-dl --add-metadata -xic" # Download only audio
 	alias ethspeed="speedometer -r enp0s25"
