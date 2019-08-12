@@ -5,8 +5,8 @@
   " Drew O'Malley
 
 " Load Pathogen for plugins:
-	execute pathogen#infect()
-	execute pathogen#helptags()
+	"execute pathogen#infect()
+	"execute pathogen#helptags()
 
 " Basics
 	set nocompatible
@@ -24,6 +24,9 @@
 	set ttyfast                 " i use st which is not detected as fast
 	set lazyredraw              " skip redraw during macros
 	set showcmd                 " display commands as typed
+
+" Set the dictonary
+	set dictionary=/usr/share/dict/words
 
 " More basics
 	set matchpairs+=<:>   " <> pairs like (), [] & {}
@@ -65,8 +68,8 @@
 	set list "show following symbols to highlight whitespace
 	set listchars=tab:→\ ,nbsp:␣,trail:•,extends:⟩,precedes:⟨
 	let &showbreak='⟩' "show this symbol before broken line overflow
-	highlight NonText ctermfg=237 guifg=#303030
-	highlight SpecialKey ctermfg=237 guifg=#303030
+	highlight NonText ctermfg=240 guifg=#303030
+	highlight SpecialKey ctermfg=240 guifg=#303030
 	highlight MatchParen cterm=none ctermbg=238
 
 " remap command mode to semi-colon
@@ -136,6 +139,9 @@
 	nnoremap <C-s> :w<cr>
 	inoremap <C-s> <esc>:w<cr>a
 
+" Make Y yank till end of line, excluding linebrake, like D and C
+	nnoremap Y yg_
+
 " Splits open at the bottom and right:
 	set splitbelow
 	set splitright
@@ -154,8 +160,8 @@
 	noremap <C-l> <C-w>l
 
 " QuickFix shortcuts
-	nnoremap <C-n> <ESC>:cnext<CR>
-	nnoremap <C-p> <ESC>:cprevious<CR>
+	nnoremap <C-N> <ESC>:cnext<CR>
+	nnoremap <C-P> <ESC>:cprevious<CR>
 
 " Replace all is aliased to S.
 	nnoremap S :%s//g<Left><Left>
@@ -188,9 +194,9 @@
 " ring bell when job is finished
 	let g:asyncrun_bell = 1
 
-" filetype specific abbreviate macros
-	autocmd FileType c,cpp,objc,objcpp,h,hpp iabbr ccom /*<cr>/<up>
-	autocmd FileType c,cpp,objc,objcpp,h,hpp iabbr ccase case : {<cr>}<up><cr>wi
+" file-type specific abbreviate macros
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccom /*<cr>/<up>
+
 " === Function keys ===
 " Get line, word and character counts with F3:
 	noremap <F3> :!wc <C-R>%<CR>
@@ -199,11 +205,15 @@
 	noremap <F6> :setlocal spell! spelllang=en_gb<CR>
 
 " build and run shortcuts
-	set makeprg=bear\ make\ -j
-	nnoremap <silent> <F5> <ESC>:update<CR>:!make debugger<CR>
-	nnoremap <silent> <F9> <ESC>:update<CR>:make<CR>
-	nnoremap <silent> <F10> <ESC>:update<CR>:make clean<CR>
+	set makeprg=clear\ &&\ bear\ make\ -j
+	nnoremap <silent> <F5> <ESC>:wa<CR>:!make debugger<CR>
+	nnoremap <silent> <F9> <ESC>:wa<CR>:make<CR><CR>
+	nnoremap <silent> <F10> <ESC>:wa<CR>:make clean<CR><CR>
+	"nnoremap <silent> <F11> :sp tags<CR>:%s/^\([^	:]*:\)\=\([^	]*\).*/syntax keyword Tag \2/<CR>:wq! tags.vim<CR>/^<CR><F12>
+	"nnoremap <silent> <F12>  :so tags.vim<CR>
 
+" Stop %f:%l:%m matching "make: *** [..." with gnu make
+	set errorformat^=%-Gmake:\ ***%m
 " F10 to toggle quickfix window
 	nnoremap <F12> :call asyncrun#quickfix_toggle(10)<cr>
 
@@ -235,7 +245,6 @@
 	let g:ycm_server_python_interpreter='/usr/bin/python2'
 	let g:ycm_global_ycm_extra_conf='/home/drew/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 
-	let g:multi_cursor_use_default_mapping=0
 
 " lsp clangd intergration
 "	if executable('clangd')
@@ -255,3 +264,134 @@
 			autocmd! BufWritePost .vimrc,vimrc source %
 		endif
 	endif
+	let g:loaded_youcompleteme = 1
+
+
+
+" Clang code-completion support. This is somewhat experimental!
+
+" A path to a clang executable.
+let g:clang_path = "clang++"
+
+" A list of options to add to the clang commandline, for example to add
+" include paths, predefined macros, and language options.
+let g:clang_opts = [
+  \ "-x","c++",
+  \ "-D__STDC_LIMIT_MACROS=1","-D__STDC_CONSTANT_MACROS=1",
+  \ "-Iinclude" ]
+
+function! ClangComplete(findstart, base)
+   if a:findstart == 1
+      " In findstart mode, look for the beginning of the current identifier.
+      let l:line = getline('.')
+      let l:start = col('.') - 1
+      while l:start > 0 && l:line[l:start - 1] =~ '\i'
+         let l:start -= 1
+      endwhile
+      return l:start
+   endif
+
+   " Get the current line and column numbers.
+   let l:l = line('.')
+   let l:c = col('.')
+
+   " Build a clang commandline to do code completion on stdin.
+   let l:the_command = shellescape(g:clang_path) .
+                     \ " -cc1 -code-completion-at=-:" . l:l . ":" . l:c
+   for l:opt in g:clang_opts
+      let l:the_command .= " " . shellescape(l:opt)
+   endfor
+
+   " Copy the contents of the current buffer into a string for stdin.
+   " TODO: The extra space at the end is for working around clang's
+   " apparent inability to do code completion at the very end of the
+   " input.
+   " TODO: Is it better to feed clang the entire file instead of truncating
+   " it at the current line?
+   let l:process_input = join(getline(1, l:l), "\n") . " "
+
+   " Run it!
+   let l:input_lines = split(system(l:the_command, l:process_input), "\n")
+
+   " Parse the output.
+   for l:input_line in l:input_lines
+      " Vim's substring operator is annoyingly inconsistent with python's.
+      if l:input_line[:11] == 'COMPLETION: '
+         let l:value = l:input_line[12:]
+
+        " Chop off anything after " : ", if present, and move it to the menu.
+        let l:menu = ""
+        let l:spacecolonspace = stridx(l:value, " : ")
+        if l:spacecolonspace != -1
+           let l:menu = l:value[l:spacecolonspace+3:]
+           let l:value = l:value[:l:spacecolonspace-1]
+        endif
+
+        " Chop off " (Hidden)", if present, and move it to the menu.
+        let l:hidden = stridx(l:value, " (Hidden)")
+        if l:hidden != -1
+           let l:menu .= " (Hidden)"
+           let l:value = l:value[:l:hidden-1]
+        endif
+
+        " Handle "Pattern". TODO: Make clang less weird.
+        if l:value == "Pattern"
+           let l:value = l:menu
+           let l:pound = stridx(l:value, "#")
+           " Truncate the at the first [#, <#, or {#.
+           if l:pound != -1
+              let l:value = l:value[:l:pound-2]
+           endif
+        endif
+
+         " Filter out results which don't match the base string.
+         if a:base != ""
+            if l:value[:strlen(a:base)-1] != a:base
+               continue
+            end
+         endif
+
+        " TODO: Don't dump the raw input into info, though it's nice for now.
+        " TODO: The kind string?
+        let l:item = {
+          \ "word": l:value,
+          \ "menu": l:menu,
+          \ "info": l:input_line,
+          \ "dup": 1 }
+
+        " Report a result.
+        if complete_add(l:item) == 0
+           return []
+        endif
+        if complete_check()
+           return []
+        endif
+
+      elseif l:input_line[:9] == "OVERLOAD: "
+         " An overload candidate. Use a crazy hack to get vim to
+         " display the results. TODO: Make this better.
+         let l:value = l:input_line[10:]
+         let l:item = {
+           \ "word": " ",
+           \ "menu": l:value,
+           \ "info": l:input_line,
+           \ "dup": 1}
+
+        " Report a result.
+        if complete_add(l:item) == 0
+           return []
+        endif
+        if complete_check()
+           return []
+        endif
+
+      endif
+   endfor
+
+
+   return []
+endfunction ClangComplete
+
+" This to enables the somewhat-experimental clang-based
+" autocompletion support.
+set omnifunc=ClangComplete
