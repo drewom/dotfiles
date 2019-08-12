@@ -1,0 +1,27 @@
+#!/bin/bash
+#      __             __
+# ____/ /___ _  ___  / /
+#/ __/ __/  ' \/ _ \/ /
+#\__/\__/_/_/_/ .__/_/
+#            /_/
+# For each filename passed in, create it with header and guards
+# Drew O'Malley
+
+for file in $@; do
+	if [ -e $file ]
+	then
+		echo File $file already exists, skipping.
+	else
+		figlet -f smslant $file | sed 's/^\s\s\s/\ *\ /;1s/\ \*/\/\*/' > $file
+		echo " * Drew O'Malley" >> $file
+		echo " */" >> $file
+		if [ ${file: -2} == ".h" ]
+		then
+			echo "#ifndef ${file^^}" | tr . _ >> $file
+			echo "#define ${file^^}" | tr . _ >> $file
+			echo >> $file
+			echo "#endif" >> $file
+		fi
+	fi
+done
+
