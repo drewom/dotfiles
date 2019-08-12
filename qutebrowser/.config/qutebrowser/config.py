@@ -6,9 +6,12 @@ config.bind('xc', 'config-cycle tabs.show always switching')
 config.bind('xg', 'tab-give') # break tab into own window
 config.bind('zd', 'download-open')
 config.bind('xb', 'config-cycle statusbar.hide')
+config.bind('xp', 'config-cycle --print --temp content.plugins ;; reload') # toggle allow plugins and reload
 config.bind('xs', 'config-source') # re-source this config file
-config.bind('xv', 'spawn --detach mpv --ytdl-format=bestvideo[height<=?1080]+bestaudio/best --fs --speed=1.33 --force-window yes {url}') # send current page to mpv to play video
-config.bind(';v', 'hint links spawn --detach mpv --ytdl-format=bestvideo[height<=?1080]+bestaudio/best --fs --speed=1.33 --force-window yes {hint-url}') # send current page to mpv to play video
+config.bind('xv', 'spawn --detach mpv --ytdl-format=bestvideo[height<=?720]+bestaudio/best --fs --speed=1.33 --force-window yes {url}') # send current page to mpv to play video
+config.bind(';v', 'hint links spawn --detach mpv --ytdl-format=bestvideo[height<=?720]+bestaudio/best --fs --speed=1.33 --force-window yes {hint-url}') # send current page to mpv to play video
+config.bind('xV', 'spawn --detach mpv --ytdl-format=bestvideo[height<=?1080]+bestaudio/best --fs --speed=1.33 --force-window yes {url}') # send current page to mpv to play video
+config.bind(';V', 'hint links spawn --detach mpv --ytdl-format=bestvideo[height<=?1080]+bestaudio/best --fs --speed=1.33 --force-window yes {hint-url}') # send current page to mpv to play video
 
 # c.### are options set at launch
 c.content.cookies.accept    = 'all'
@@ -30,7 +33,7 @@ c.tabs.position             = "left"
 # Default show tab bar when cycling though them
 c.tabs.show                 = "switching"
 c.tabs.show_switching_delay = 450
-c.tabs.title.format         = "{audio}{title}"
+c.tabs.title.format         = "{audio}{current_title}"
 c.tabs.width                = "25%"
 c.tabs.select_on_remove     = 'prev' # previous tab is in the direction of parent
 
