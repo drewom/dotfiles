@@ -88,18 +88,7 @@
 	}
 # shorthand aliases for the above special switches 'cd -[- 0-9]'
 	alias l=cd\ --
-	alias 1=cd\ -1
-	alias 2=cd\ -2
-	alias 3=cd\ -3
-	alias 4=cd\ -4
-	alias 5=cd\ -5
-	alias 6=cd\ -6
-	alias 7=cd\ -7
-	alias 8=cd\ -8
-	alias 9=cd\ -9
-	#function cd {
-	#	builtin cd "$@" > /dev/null && ls -hNF --color=auto --group-directories-first
-	#}
+	for i in {1..9}; do alias $i="cd -$i"; done
 
 # Setting bash prompt. Capitalizes username and host if root user
 	if [ "$EUID" -ne 0 ]
