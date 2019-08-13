@@ -158,7 +158,7 @@ export GPG_TTY=$(tty)
 # Adding color
 	alias ls='ls -hFN --color=auto --group-directories-first'
 	alias la='ls -hFNA --color=auto --group-directories-first'
-	alias ll='ls -hlFA --color=auto --group-directories-first'
+	alias ll='ls -hlFAS --color=auto --group-directories-first'
 	alias ccat="highlight --out-format=xterm256 --force" #Color cat - print file with syntax highlighting.
 	alias cgrep="grep --color=always" # Color highlight match.
 

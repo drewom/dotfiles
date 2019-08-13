@@ -1,0 +1,53 @@
+[user]
+	email = 8580273+drewom@users.noreply.github.com
+	name = Drew O'Malley
+
+[alias]
+# logs
+	l  = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+	lg = log --graph --oneline --decorate --all
+
+	a  = add
+	ap = add -p
+	aa = add .
+	ac = !git add -A && git commit -m
+	c  = commit --verbose
+	ca = commit -a --verbose
+	cm = commit -m
+	cam = commit -a -m
+	m  = commit --amend --verbose
+
+	d = diff
+	ds = diff --stat
+	dc = diff --cached
+	a = add
+	ap = add -p
+	aa = add .
+	c = commit --verbose
+	ca = commit -a --verbose
+	cm = commit -m
+	cam = commit -a -m
+	m = commit --amend --verbose
+
+	d = diff
+	ds = diff --stat
+	dc = diff --cached
+
+	s = status -s
+	co = checkout
+	cob = checkout -b
+
+	sl = !git --no-pager stash list --decorate=short --pretty=oneline -n1
+
+	pom = push origin master
+
+# list branches sorted by last modified
+	b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+
+# list aliases
+	la = "!git config -l | grep alias | cut -c 7-"
+
+# open this config file
+	cf = config --global --edit
+[core]
+	excludesFile = /home/drew/.cvsignore

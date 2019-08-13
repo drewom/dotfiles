@@ -1,0 +1,4 @@
+# files to ignore for rsync, git, svn...
+tags
+*~
+autotracker
