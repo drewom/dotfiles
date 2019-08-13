@@ -78,6 +78,9 @@
 	vnoremap ; :
 	vnoremap : ;
 
+" // takes selected text and searches for it
+	vnoremap // y/\V<C-r>=escape(@",'/\')<CR><CR>
+
 " map tab to tab only if not mid word
 	function! CleverTab()
 		if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
