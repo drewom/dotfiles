@@ -37,8 +37,7 @@
 	co = checkout
 	cob = checkout -b
 
-	sl = !git --no-pager stash list --decorate=short --pretty=oneline -n1
-
+	ls = !git --no-pager stash list --decorate=short --pretty=oneline -n1
 	pom = push origin master
 
 # list branches sorted by last modified
