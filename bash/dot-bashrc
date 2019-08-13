@@ -135,10 +135,15 @@ export GPG_TTY=$(tty)
 		done
 	fi
 
-# Alternative to rm that moves files to hidden trash folder
+# Alternative to rm that moves files to hidden trash folder,
 	function trash {
-		mkdir ~/.trash > /dev/null 2> /dev/null; mv "$@" ~/.trash
+		mkdir /tmp/.trash >/dev/null 2> /dev/null
+		 mv -v "$@" /tmp/.trash 2>&1 | sed -e "s/\(mv\|renam\)/trash/g"
 	}
+	function empty-trash {
+		/bin/rm -rv /tmp/.trash/ 2> /dev/null
+	}
+	alias rm='rm -i' # force interactive to avoid accidental rm
 
 # Golang binaries
 	export TWEEGO_PATH="$HOME/.tweego/story-formats"
