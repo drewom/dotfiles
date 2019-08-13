@@ -12,7 +12,7 @@ for file in $@; do
 	then
 		echo File $file already exists, skipping.
 	else
-		figlet -f smslant $file | sed 's/^\s\s\s/\ *\ /;1s/\ \*/\/\*/' > $file
+		figlet -f smslant $file | sed 's/^\s\s\s/\ *\ /;1s/../\/\*/' > $file
 		echo " * Drew O'Malley" >> $file
 		echo " */" >> $file
 		if [ ${file: -2} == ".h" ]
