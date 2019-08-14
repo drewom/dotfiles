@@ -143,7 +143,7 @@ export GPG_TTY=$(tty)
 	function empty-trash {
 		/bin/rm -rv /tmp/.trash/ 2> /dev/null
 	}
-	alias rm='rm -i' # force interactive to avoid accidental rm
+	alias rm='rm -I' # force interactive to avoid accidental rm
 
 # Golang binaries
 	export TWEEGO_PATH="$HOME/.tweego/story-formats"
