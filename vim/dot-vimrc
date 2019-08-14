@@ -71,6 +71,11 @@
 	highlight NonText ctermfg=240 guifg=#303030
 	highlight SpecialKey ctermfg=240 guifg=#303030
 	highlight MatchParen cterm=none ctermbg=238
+	highlight SpellBad   ctermfg=0
+	highlight SpellCap   ctermfg=0
+	highlight SpellRare  ctermfg=0
+	highlight SpellLocal ctermfg=0
+
 
 " remap command mode to semi-colon
 	nnoremap ; :
@@ -210,15 +215,14 @@
 " build and run shortcuts
 	set makeprg=clear\ &&\ bear\ make\ -j
 	nnoremap <silent> <F5> <ESC>:wa<CR>:!make debugger<CR>
-	nnoremap <silent> <F9> <ESC>:wa<CR>:make<CR><CR>
-	nnoremap <silent> <F10> <ESC>:wa<CR>:make clean<CR><CR>
-	"nnoremap <silent> <F11> :sp tags<CR>:%s/^\([^	:]*:\)\=\([^	]*\).*/syntax keyword Tag \2/<CR>:wq! tags.vim<CR>/^<CR><F12>
-	"nnoremap <silent> <F12>  :so tags.vim<CR>
+	nnoremap <silent> <F9> <ESC>:wa<CR>:make<CR>
+	nnoremap <silent> <F10> <ESC>:wa<CR>:make clean<CR>
 
 " Stop %f:%l:%m matching "make: *** [..." with gnu make
 	set errorformat^=%-Gmake:\ ***%m
-" F10 to toggle quickfix window
-	nnoremap <F12> :call asyncrun#quickfix_toggle(10)<cr>
+
+" F12 to toggle quickfix window
+	nnoremap <F12> :cwindow<cr>
 
 " interactive keys that should switch back to normal mode
 	imap <silent> <F1> <ESC><F1>
