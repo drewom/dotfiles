@@ -203,7 +203,8 @@
 	let g:asyncrun_bell = 1
 
 " file-type specific abbreviate macros
-	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccom /*<cr>/<up>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccom /* */<left><left><left>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccase case:{}break;<left><left><left><left><left><left><left><left><left>
 
 " === Function keys ===
 " Get line, word and character counts with F3:
