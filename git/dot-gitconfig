@@ -33,7 +33,7 @@
 	ds = diff --stat
 	dc = diff --cached
 
-	s = status -s
+	s = status --short --branch
 	co = checkout
 	cob = checkout -b
 
