@@ -203,8 +203,22 @@
 	let g:asyncrun_bell = 1
 
 " file-type specific abbreviate macros
-	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccom /* */<left><left><left>
-	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccase case:{}break;<left><left><left><left><left><left><left><left><left>
+   func EatChar(pat) " delete char if matches pat, use for removing space in abbr
+      let c = nr2char(getchar(0))
+      return (c =~ a:pat) ? '' : c
+   endfunc
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccom /*  */<left><left><left><C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr iif if(){<CR>}<up><C-o>$<C-o>F)<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr eelif else if () {<CR>}<up><C-o>$<C-o>F)<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr eelse else{<CR>}<up><C-o>$<C-o>F}<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr sswitch switch(){<CR>}<up><C-o>$<C-o>F)<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ffor for(){<CR>}<up><C-o>$<C-o>F)<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr wwhile while(){<CR>}<up><C-o>$<C-o>F)<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ddo do {<CR>} while()<left><C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ccase case :{}break;<C-o>$<C-o>F:<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp,js iabbr ddefault default:{}break;<C-o>$<C-o>F}<C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp    iabbr ii #include ""<left><C-R>=EatChar('\s')<CR>
+	autocmd FileType c,cpp,objc,objcpp,h,hpp    iabbr II #include <><left><C-R>=EatChar('\s')<CR>
 
 " === Function keys ===
 " Get line, word and character counts with F3:
