@@ -10,6 +10,7 @@ for repo in ~/repos/* ~/.dotfiles; do
 	then
 		cd $repo
 		echo [${PWD##*/}]
-		git pull
+		git -c color.ui=always pull | sed 's/^/\t/g'
+		git -c color.ui=always status --short --branch | sed 's/^/\t/g'
 	fi
 done
