@@ -49,4 +49,4 @@
 # open this config file
 	cf = config --global --edit
 [core]
-	excludesFile = /home/drew/.cvsignore
+	excludesFile = %(prefix)/home/drew/.cvsignore
